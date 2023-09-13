@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import pyautogui
+import time
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -20,6 +21,10 @@ cap = cv2.VideoCapture(0)
 distance = -1
 mid_x, mid_y = -1, -1
 min_dis = 50
+
+
+  
+
 
 with mp_hands.Hands(
     model_complexity=0,
@@ -74,67 +79,96 @@ with mp_hands.Hands(
     # 3x3 grid
     if distance > 0 and distance < min_dis:    
       # black grid
-      cv2.line(image, (w//3, 0), (w//3, h), colors['black'], 2)
-      cv2.line(image, (2*w//3, 0), (2*w//3, h), colors['black'], 2)
-      cv2.line(image, (0, h//3), (w, h//3), colors['black'], 2)
-      cv2.line(image, (0, 2*h//3), (w, 2*h//3), colors['black'], 2)      
+      cv2.line(image, (w//3, 0), (w//3, h), colors['black'], 1)
+      cv2.line(image, (2*w//3, 0), (2*w//3, h), colors['black'], 1)
+      cv2.line(image, (0, h//3), (w, h//3), colors['black'], 1)
+      cv2.line(image, (0, 2*h//3), (w, 2*h//3), colors['black'], 1)      
     else:
       # white grid
-      cv2.line(image, (w//3, 0), (w//3, h), colors['white'], 2)
-      cv2.line(image, (2*w//3, 0), (2*w//3, h), colors['white'], 2)
-      cv2.line(image, (0, h//3), (w, h//3), colors['white'], 2)
-      cv2.line(image, (0, 2*h//3), (w, 2*h//3), colors['white'], 2)
+      cv2.line(image, (w//3, 0), (w//3, h), colors['white'], 1)
+      cv2.line(image, (2*w//3, 0), (2*w//3, h), colors['white'], 1)
+      cv2.line(image, (0, h//3), (w, h//3), colors['white'], 1)
+      cv2.line(image, (0, 2*h//3), (w, 2*h//3), colors['white'], 1)
 
     # text at the bottom of the middle grid square
-    cv2.putText(image, 'control', (w//2 - 50, h//3*2 - 20),
+    min_height = 60
+    cv2.putText(image, 'control', (w//2 - 50, h//3*2 - min_height),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, colors['yellow'], 2)
     # text in the left middle grid square
-    cv2.putText(image, 'left', (50, h//3*2 - 20),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, colors['yellow'], 1)
+    cv2.putText(image, 'left', (50, h//3*2 - min_height),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, colors['yellow'], 2)
     # text in the right middle grid square
-    cv2.putText(image, 'right', (w//3*2 + 50, h//3*2 - 20),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, colors['yellow'], 1)
+    cv2.putText(image, 'right', (w//3*2 + 50, h//3*2 - min_height),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, colors['yellow'], 2)
     # text in the top middle grid square
-    cv2.putText(image, 'up', (w//2 - 20, h//3 - 20),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, colors['yellow'], 1)
+    cv2.putText(image, 'up', (w//2 - 20, h//3 - min_height),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, colors['yellow'], 2)
     # text in the bottom middle grid square
-    cv2.putText(image, 'down', (w//2 - 30, h//3*2 + 50),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, colors['yellow'], 1)
+    cv2.putText(image, 'down', (w//2 - 30, h//3*2 + min_height),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, colors['yellow'], 2)
+    # text in the top left grid square
+    cv2.putText(image, 'esc', (50, h//3 - min_height),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, colors['green'], 1)
+    # text in the top right grid square
+    cv2.putText(image, 'space', (w//3*2 + 50, h//3 - min_height),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, colors['green'], 1)
+    # text in the bottom left grid square
+    cv2.putText(image, 'enter', (50, h//3*2 + min_height),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, colors['green'], 1)
 
     # create a rectangle when the mid_x and mid_y are in a certain area of grid
     # middle left
     if mid_x > 0 and mid_x < w//3 and mid_y > h//3 and mid_y < h//3*2:
       cv2.rectangle(image, (0, h//3), (w//3, h//3*2), colors['yellow'], 2)
       # press left
-      
-      if distance<min_dis:pyautogui.press('left')
-
+      pass
 
     # middle right
     if mid_x > w//3*2 and mid_x < w and mid_y > h//3 and mid_y < h//3*2:
       cv2.rectangle(image, (w//3*2, h//3), (w, h//3*2), colors['yellow'], 2)
       # press right
-      if distance<min_dis:pyautogui.press('right')
+      pass
+        
 
     # middle top
     if mid_x > w//3 and mid_x < w//3*2 and mid_y > 0 and mid_y < h//3:
       cv2.rectangle(image, (w//3, 0), (w//3*2, h//3), colors['yellow'], 2)
       # press up
-      if distance<min_dis:pyautogui.press('up')
+      pass
+      
     
     # middle bottom
     if mid_x > w//3 and mid_x < w//3*2 and mid_y > h//3*2 and mid_y < h:
       cv2.rectangle(image, (w//3, h//3*2), (w//3*2, h), colors['yellow'], 2)
       # press down
-      if distance<min_dis:pyautogui.press('down')
+      pass
+      
+    # top lelf
+    if mid_x > 0 and mid_x < w//3 and mid_y > 0 and mid_y < h//3:
+      cv2.rectangle(image, (0, 0), (w//3, h//3), colors['yellow'], 2)
+      # press esc
+      if distance<min_dis and tap == False:
+        pyautogui.press('esc')
+        tap = True
+    
+    # top right
+    if mid_x > w//3*2 and mid_x < w and mid_y > 0 and mid_y < h//3:
+      cv2.rectangle(image, (w//3*2, 0), (w, h//3), colors['yellow'], 2)
+      # press space
+      pass
 
+    # bottom left
+    if mid_x > 0 and mid_x < w//3 and mid_y > h//3*2 and mid_y < h:
+      cv2.rectangle(image, (0, h//3*2), (w//3, h), colors['yellow'], 2)
+      # press enter
+      pass
+    
     # middle
     if mid_x > w//3 and mid_x < w//3*2 and mid_y > h//3 and mid_y < h//3*2:
       cv2.rectangle(image, (w//3, h//3), (w//3*2, h//3*2), colors['red'], 2)
-      
-    
-    cv2.imshow('MediaPipe Hands', image)
 
+    cv2.imshow('MediaPipe Hands', image)
+ 
     if cv2.waitKey(5) & 0xFF == 27:
       break
 cap.release()
